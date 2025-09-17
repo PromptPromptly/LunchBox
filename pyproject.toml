@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lunchbox"
+version = "0.1.0"
+description = "A lightweight audio slicing and stem separation toolkit"
+authors = [{name = "LunchBox Contributors"}]
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "numpy",
+    "scipy",
+    "soundfile",
+    "librosa",
+]
+
+[project.optional-dependencies]
+ml = [
+    "spleeter",
+    "demucs",
+]
+test = [
+    "pytest",
+]
+
+[project.scripts]
+lunchbox = "lunchbox.cli:run_cli"
