@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stem Separator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="card">
+      <h1>🎛️ Stem Separator</h1>
+      <p class="subtitle">Upload a track and split it into stems in one click.</p>
+
+      <label for="audioFile" class="file-label">Choose Audio File</label>
+      <input id="audioFile" type="file" accept="audio/*" />
+      <p id="fileName" class="file-name">No file selected</p>
+
+      <button id="separateBtn" class="primary-btn" type="button">Separate Stems</button>
+
+      <div id="loadingSection" class="loading-section hidden" aria-live="polite">
+        <div class="spinner" role="status" aria-label="Separating stems"></div>
+        <p>Separating stems...</p>
+      </div>
+
+      <section id="stemsSection" class="stems-grid hidden" aria-label="Stem downloads">
+        <button class="stem-btn" data-stem="drums" type="button">🥁 Drums</button>
+        <button class="stem-btn" data-stem="bass" type="button">🎸 Bass</button>
+        <button class="stem-btn" data-stem="vocals" type="button">🎤 Vocals</button>
+        <button class="stem-btn" data-stem="other" type="button">🎹 Other</button>
+      </section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
