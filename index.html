@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bald Eagle Sky Sovereign</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #040812;
+      --glass: rgba(11, 23, 45, 0.65);
+      --accent: #6ce5ff;
+      --accent-2: #ffcb5b;
+      --text: #eef4ff;
+      --muted: #b8c8e8;
+      --ok: #73f2bc;
+      --danger: #ff7788;
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      background: radial-gradient(circle at 20% 5%, #0d2647 0%, #08172f 30%, #060d1d 58%, var(--bg) 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .panel {
+      height: 100vh;
+      overflow-y: auto;
+      padding: 1rem 1rem 1.2rem;
+      border-right: 1px solid rgba(187, 220, 255, 0.19);
+      background: linear-gradient(170deg, rgba(8,18,38,.9), rgba(15,31,62,.85));
+      backdrop-filter: blur(8px);
+      box-shadow: inset -20px 0 35px rgba(2, 8, 24, 0.7);
+    }
+
+    .hero {
+      position: relative;
+      border: 1px solid rgba(130, 197, 255, 0.28);
+      border-radius: 18px;
+      padding: 1rem;
+      background: linear-gradient(150deg, rgba(23,58,105,0.6), rgba(13,30,58,.55));
+      overflow: hidden;
+      margin-bottom: .85rem;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -70px -70px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(108,229,255,.45), rgba(108,229,255,0));
+      pointer-events: none;
+    }
+
+    h1 { margin: 0; font-size: 1.2rem; letter-spacing: .2px; }
+    .sub { margin: .45rem 0 0; color: var(--muted); font-size: .88rem; line-height: 1.35; }
+
+    .badge-row { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .75rem; }
+    .badge {
+      border-radius: 999px;
+      padding: .25rem .55rem;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .3px;
+      border: 1px solid rgba(130, 196, 255, 0.32);
+      background: rgba(7,16,34,.75);
+      color: #d8ecff;
+    }
+
+    .glass {
+      margin-top: .8rem;
+      border: 1px solid rgba(136, 195, 255, 0.2);
+      border-radius: 14px;
+      padding: .75rem;
+      background: var(--glass);
+      box-shadow: 0 10px 26px rgba(0,0,0,.3);
+    }
+
+    h2 { font-size: .92rem; margin: 0 0 .5rem; color: #d5e7ff; letter-spacing: .2px; }
+    p, li { font-size: .85rem; color: #d6e4fb; }
+    ul { margin: .35rem 0; padding-left: 1rem; }
+
+    .control { margin: .6rem 0 .85rem; }
+    .control label { display: flex; justify-content: space-between; font-size: .79rem; color: #d2e5ff; margin-bottom: .35rem; }
+    .control output { color: var(--accent); font-variant-numeric: tabular-nums; }
+    input[type="range"] {
+      width: 100%;
+      appearance: none;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2f4168, #4f79bb);
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #6ce5ff;
+      box-shadow: 0 0 0 3px rgba(108,229,255,.28);
+    }
+
+    .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+    .metric {
+      border-radius: 10px;
+      padding: .5rem;
+      border: 1px solid rgba(159, 205, 255, 0.22);
+      background: rgba(8,20,40,0.58);
+    }
+    .label { display: block; font-size: .68rem; color: #bad1f2; text-transform: uppercase; letter-spacing: .5px; }
+    .value { font-size: 1rem; font-weight: 700; margin-top: .15rem; }
+
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .7rem; }
+    button {
+      border: 0;
+      border-radius: .7rem;
+      padding: .6rem .55rem;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .12s ease, filter .18s ease;
+    }
+    button:hover { transform: translateY(-1px); filter: brightness(1.07); }
+    .btn-prime { background: linear-gradient(125deg, #4b7fff, #29b7ff); }
+    .btn-alt { background: linear-gradient(125deg, #4e5f82, #2d3f63); }
+
+    .objective {
+      margin-top: .75rem;
+      padding: .65rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 203, 91, .36);
+      background: linear-gradient(150deg, rgba(64,46,19,.5), rgba(30,25,16,.5));
+      font-size: .83rem;
+      color: #ffe2a7;
+    }
+
+    .scene-wrap { position: relative; }
+    canvas { width: 100%; height: 100vh; display: block; }
+    .hud {
+      position: absolute;
+      left: 18px;
+      top: 14px;
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      padding: .55rem .7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(149, 208, 255, 0.28);
+      background: rgba(6, 16, 33, .62);
+      backdrop-filter: blur(6px);
+      font-size: .78rem;
+      color: #d7e8ff;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      text-align: center;
+      background: radial-gradient(circle, rgba(16, 35, 67,.2), rgba(4,8,16,.85));
+      color: #fff;
+    }
+    .overlay.active { display: grid; }
+    .overlay h3 { margin: 0 0 .3rem; font-size: 2rem; }
+
+    @media (max-width: 980px) {
+      body { grid-template-columns: 1fr; grid-template-rows: auto 50vh; overflow: auto; }
+      .panel { height: auto; border-right: 0; border-bottom: 1px solid rgba(187,220,255,.19); }
+      canvas { height: 50vh; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="panel">
+    <div class="hero">
+      <h1>🦅 Bald Eagle: Sky Sovereign</h1>
+      <p class="sub">An upgraded cinematic flight sandbox. Master winds, hunt thermals, and chain style combos for huge scores.</p>
+      <div class="badge-row">
+        <span class="badge">CINEMATIC SKY</span><span class="badge">ADVANCED WIND</span><span class="badge">STYLE COMBOS</span>
+      </div>
+    </div>
+
+    <section class="glass">
+      <h2>Flight Controls</h2>
+      <ul>
+        <li>W/S or ↑/↓ = Pitch</li>
+        <li>A/D or ←/→ = Bank turn</li>
+        <li>Space = Wing beat boost</li>
+        <li>Shift = Precision glide mode</li>
+        <li>R = Relaunch</li>
+      </ul>
+    </section>
+
+    <section class="glass">
+      <h2>Wind & Atmosphere Lab</h2>
+      <div class="control"><label>Wind speed <output id="windSpeedOut"></output></label><input id="windSpeed" type="range" min="0" max="45" value="18"></div>
+      <div class="control"><label>Gust chaos <output id="gustOut"></output></label><input id="gust" type="range" min="0" max="30" value="12"></div>
+      <div class="control"><label>Thermal lift <output id="thermalOut"></output></label><input id="thermal" type="range" min="0" max="30" value="12"></div>
+      <div class="control"><label>Air density <output id="densityOut"></output></label><input id="density" type="range" min="70" max="130" value="100"></div>
+    </section>
+
+    <section class="glass">
+      <h2>Live Telemetry</h2>
+      <div class="metrics">
+        <div class="metric"><span class="label">Score</span><div class="value" id="score">0</div></div>
+        <div class="metric"><span class="label">Altitude</span><div class="value" id="altitude">300 m</div></div>
+        <div class="metric"><span class="label">Airspeed</span><div class="value" id="speed">0 m/s</div></div>
+        <div class="metric"><span class="label">Stamina</span><div class="value" id="stamina">100%</div></div>
+      </div>
+      <div class="btn-row">
+        <button id="storm" class="btn-prime">⚡ Storm Mode</button>
+        <button id="calm" class="btn-alt">🌤 Calm Training</button>
+      </div>
+      <div class="objective" id="objective">Objective: Climb above <strong>2,000 m</strong> and land smoothly for a bonus.</div>
+    </section>
+  </aside>
+
+  <div class="scene-wrap">
+    <canvas id="sim"></canvas>
+    <div class="hud"><span class="dot" id="statusDot"></span><span id="hudTxt">Wind Stable</span></div>
+    <div class="overlay" id="overlay"><div><h3>Run Complete</h3><p id="overlayTxt">Press R to soar again.</p></div></div>
+  </div>
+
+<script>
+const canvas = document.getElementById('sim');
+const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
+const overlayTxt = document.getElementById('overlayTxt');
+
+const sliders = {
+  windSpeed: document.getElementById('windSpeed'),
+  gust: document.getElementById('gust'),
+  thermal: document.getElementById('thermal'),
+  density: document.getElementById('density')
+};
+const outs = {
+  windSpeed: document.getElementById('windSpeedOut'),
+  gust: document.getElementById('gustOut'),
+  thermal: document.getElementById('thermalOut'),
+  density: document.getElementById('densityOut')
+};
+const ui = ['score','altitude','speed','stamina','objective','hudTxt','statusDot'].reduce((a,k)=>{a[k]=document.getElementById(k);return a;},{});
+
+const st = {
+  bird: {x:0,y:-280,vx:8,vy:0,p:0,r:0,stamina:100,trail:[]},
+  input: {u:0,d:0,l:0,ri:0,flap:0,glide:0},
+  t:0, score:0, combo:1, done:false, seed:Math.random()*999, peak:280
+};
+
+function size(){ canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; }
+window.addEventListener('resize', size); size();
+
+function noise(t){ return Math.sin(t*0.7+st.seed)*0.5 + Math.sin(t*1.43+st.seed*0.6)*0.35 + Math.sin(t*2.51)*0.15; }
+function windAt(t,alt){
+  const w=+sliders.windSpeed.value, g=+sliders.gust.value, th=+sliders.thermal.value;
+  return {x: w*(0.6+alt/4200)+noise(t*0.45)*g, y: -Math.max(0, noise(t*0.58+alt*0.001))*th};
+}
+function fmt(){ outs.windSpeed.value=`${sliders.windSpeed.value} m/s`; outs.gust.value=`${sliders.gust.value}/30`; outs.thermal.value=`${sliders.thermal.value}/30`; outs.density.value=`${(+sliders.density.value/100).toFixed(2)}x`; }
+Object.values(sliders).forEach(s=>s.addEventListener('input',fmt)); fmt();
+
+function reset(){
+  st.bird={x:0,y:-280,vx:8,vy:0,p:0,r:0,stamina:100,trail:[]}; st.t=0; st.score=0; st.combo=1; st.done=false; st.seed=Math.random()*999; st.peak=280;
+  overlay.classList.remove('active'); ui.objective.innerHTML='Objective: Climb above <strong>2,000 m</strong> and land smoothly for a bonus.';
+}
+
+document.getElementById('storm').onclick=()=>{ sliders.windSpeed.value=36; sliders.gust.value=25; sliders.thermal.value=22; sliders.density.value=92; fmt(); };
+document.getElementById('calm').onclick=()=>{ sliders.windSpeed.value=10; sliders.gust.value=4; sliders.thermal.value=8; sliders.density.value=108; fmt(); };
+
+function update(dt){
+  if(st.done) return;
+  st.t+=dt;
+  const b=st.bird, dens=+sliders.density.value/100, alt=-b.y;
+  const wind = windAt(st.t, alt);
+  b.p += (st.input.d - st.input.u) * 2.1 * dt;
+  b.r += (st.input.ri - st.input.l) * 3.2 * dt;
+  b.p *= 0.985; b.r *= 0.96;
+
+  const lift=(16 + Math.cos(b.p)*12 + (st.input.glide?9:0))*dens;
+  const drag=0.17 + Math.abs(b.r)*0.07 + (st.input.glide?-0.04:0.02);
+
+  if(st.input.flap && b.stamina > 8){ b.vy -= 58*dt; b.vx += 20*dt; b.stamina -= 26*dt; st.combo = Math.min(5, st.combo + 0.35*dt); }
+  else { b.stamina=Math.min(100,b.stamina+(st.input.glide?9:6)*dt); st.combo = Math.max(1, st.combo - 0.22*dt); }
+
+  b.vx += (wind.x - b.vx*drag + Math.sin(b.r)*7)*dt;
+  b.vy += (19 - lift + wind.y + Math.sin(b.p)*18)*dt;
+  b.x += b.vx*dt*12; b.y += b.vy*dt*12;
+
+  b.trail.push({x:b.x,y:b.y,alt}); if(b.trail.length>220) b.trail.shift();
+  st.peak = Math.max(st.peak, alt);
+  const speed = Math.hypot(b.vx,b.vy);
+  st.score += (Math.max(0,alt/1200 + speed/35) * st.combo) * dt * 11;
+
+  const gustLevel=Math.abs(noise(st.t*0.5))*+sliders.gust.value;
+  ui.hudTxt.textContent = gustLevel > 17 ? 'Severe Gust Front' : gustLevel > 9 ? 'Turbulent Air' : 'Wind Stable';
+  ui.statusDot.style.background = gustLevel > 17 ? 'var(--danger)' : gustLevel > 9 ? 'var(--accent-2)' : 'var(--ok)';
+  ui.statusDot.style.boxShadow = `0 0 10px ${getComputedStyle(ui.statusDot).backgroundColor}`;
+
+  if(alt > 2000) ui.objective.innerHTML = `Objective unlocked: descend to <strong>200 m</strong> and keep speed under <strong>18 m/s</strong> for landing bonus.`;
+
+  if((alt < 210 && st.peak > 2000 && speed < 18) || alt < -10 || (speed < 2 && alt > 450)){
+    st.done = true;
+    if(alt < 210 && st.peak > 2000 && speed < 18) { st.score += 600; overlayTxt.textContent = `Perfect landing! Peak ${Math.round(st.peak)}m • Final score ${Math.round(st.score)}`; }
+    else overlayTxt.textContent = `Flight ended at ${Math.round(alt)}m • Score ${Math.round(st.score)}.`;
+    overlay.classList.add('active');
+  }
+
+  ui.score.textContent = Math.round(st.score).toLocaleString();
+  ui.altitude.textContent = `${Math.max(0,Math.round(alt))} m`;
+  ui.speed.textContent = `${speed.toFixed(1)} m/s`;
+  ui.stamina.textContent = `${Math.round(b.stamina)}%`;
+}
+
+function drawSky(){
+  const g=ctx.createLinearGradient(0,0,0,canvas.height);
+  g.addColorStop(0,'#7ec7ff'); g.addColorStop(.3,'#3f83d3'); g.addColorStop(.75,'#173964'); g.addColorStop(1,'#0b1a31');
+  ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+function draw(dt){
+  drawSky();
+  const b=st.bird, camX=b.x-canvas.width*0.38, camY=b.y-canvas.height*0.55;
+
+  // clouds parallax
+  for(let i=0;i<10;i++){
+    const cx=((i*380 + st.t*20*(i%2?1:-1))% (canvas.width+300)) - 150;
+    const cy=(i*110 + (camY*0.18)) % (canvas.height+120) - 80;
+    ctx.fillStyle='rgba(255,255,255,0.12)';
+    ctx.beginPath(); ctx.ellipse(cx,cy,80,26,0,0,Math.PI*2); ctx.fill();
+  }
+
+  // trail
+  ctx.strokeStyle='rgba(255,240,160,0.72)'; ctx.lineWidth=2; ctx.beginPath();
+  b.trail.forEach((p,i)=>{ const x=p.x-camX,y=p.y-camY; if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  ctx.stroke();
+
+  // bird glow
+  const x=b.x-camX,y=b.y-camY;
+  ctx.save(); ctx.translate(x,y); ctx.rotate(b.r*0.35+b.p*0.2);
+  const glow=ctx.createRadialGradient(0,0,2,0,0,42); glow.addColorStop(0,'rgba(255,216,138,.35)'); glow.addColorStop(1,'rgba(255,216,138,0)');
+  ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(0,0,42,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#4a2f14'; ctx.beginPath(); ctx.ellipse(0,0,18,9,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#f9fdff';
+  ctx.beginPath(); ctx.moveTo(-6,-1); ctx.lineTo(-34,-20-b.r*5); ctx.lineTo(-8,4); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(6,-1); ctx.lineTo(34,-20+b.r*5); ctx.lineTo(8,4); ctx.fill();
+  ctx.fillStyle='#ffe9a6'; ctx.beginPath(); ctx.arc(16,-2,5,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+let prev = performance.now();
+(function loop(now){ const dt=Math.min(0.033,(now-prev)/1000); prev=now; update(dt); draw(dt); requestAnimationFrame(loop); })(prev);
+
+window.addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase(); if(k==='w'||e.key==='ArrowUp')st.input.u=1; if(k==='s'||e.key==='ArrowDown')st.input.d=1; if(k==='a'||e.key==='ArrowLeft')st.input.l=1; if(k==='d'||e.key==='ArrowRight')st.input.ri=1;
+  if(e.key===' ')st.input.flap=1; if(e.key==='Shift')st.input.glide=1; if(k==='r')reset();
+});
+window.addEventListener('keyup',e=>{
+  const k=e.key.toLowerCase(); if(k==='w'||e.key==='ArrowUp')st.input.u=0; if(k==='s'||e.key==='ArrowDown')st.input.d=0; if(k==='a'||e.key==='ArrowLeft')st.input.l=0; if(k==='d'||e.key==='ArrowRight')st.input.ri=0;
+  if(e.key===' ')st.input.flap=0; if(e.key==='Shift')st.input.glide=0;
+});
+</script>
+</body>
+</html>
